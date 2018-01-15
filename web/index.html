@@ -1,0 +1,63 @@
+<!--
+Jady Jacques
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Short URL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <!-- Custom Theme files -->
+    <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" media="all">
+    <link href="css/style.css" rel="stylesheet" type="text/css" media="all"/>
+    <!-- //Custom Theme files -->
+    <!-- web font -->
+    <link href="//fonts.googleapis.com/css?family=Oswald:400,700" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+    <script src="jquery-3.2.1.js"></script>
+</head>
+<body>
+<br><br><br><br><br><br>
+<div class="main-agileits">
+    <!--form-->
+    <div class="form-w3-agile">
+        <h2>Shorten URL</h2>
+        <form action="#" method="post">
+            <div class="form-sub-w3">
+                <input type="text" name="url" placeholder="Insert your url" required=""/>
+            </div>
+            <div class="submit-w3l">
+                <input type="submit" value="Short" onclick="geturl();">
+            </div>
+            <script>
+                function sendToServer(input) {
+                    $.ajax({
+                        url: 'http://localhost:8080/create?url=' + input[0].value,
+                        type: 'PUT',
+                        dataType: "text",
+                        success: function (data) {
+                            var url = $.parseJSON(data);
+                            alert(url.url);
+                            return url;
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            alert(xhr.status);
+                            alert(thrownError);
+                        }
+                    });
+                }
+
+                function geturl() {
+                    $("form").submit(function (event) {
+                        var input = $(this).serializeArray();
+                        event.preventDefault();
+                        return sendToServer(input);
+                    });
+                }
+            </script>
+        </form>
+    </div>
+    <!--//form-->
+</div>
+</body>
+</html>
