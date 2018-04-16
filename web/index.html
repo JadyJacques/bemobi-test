@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <!-- Latest compiled and minified JavaScript -->
+    <!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"-->
+    <!--integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"-->
+    <!--crossorigin="anonymous"></script>-->
+    <!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
+    <link rel='stylesheet' href='css/style.css'>
+    <title>URL Shortner</title>
+    <link rel="shortcut icon" href="img/favicon.ico"/>
+</head>
+</head>
+<body>
+<div class="jumbotron" align="center">
+    <h1>URL Shortener Service</h1>
+</div>
+<div class="container">
+    <div class="blue-line"></div>
+    <table style="width:100%">
+        <th>
+            <form>
+                <div class="input form-group">
+                    <label for="url">Enter URL:</label>
+                    <input type="text" id="longurl" name="url" class="form-control"/> <br/>
+                    <input class="btn btn-primary" type="submit" hidden id="myBtn" value="Create Shorten"
+                           onclick="createShortUrl();"/>
+                    <div id="myModal" class="modal fade">
+
+                        <!-- Modal content -->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <span class="close">&times;</span>
+                                <h2>
+                                    <div id="actionNameShortUrl"></div>
+                                </h2>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                <div id="contentShortUrl"></div>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <br><br>
+                            </div>
+                        </div>
+
+                    </div>
+            </form>
+        </th>
+        <th>
+            <form>
+                <div class="input form-group">
+                    <label for="url">Enter shorten URL:</label>
+                    <input type="text" id="longurl" name="url" class="form-control"/> <br/>
+                    <input class="btn btn-primary" type="submit" id="myBtn2" value="Retrieve" onclick="getOriginalUrl();"/>
+                </div>
+            </form>
+        </th>
+    </table>
+    <script>
+        function sendToServer(input, action, method) {
+            let url = 'http://localhost:8080/' + action + '?url=' + input[0].value;
+            fetch(url, {
+                method: method
+            })
+                .then(function (response) {
+                    response.json().then(function (data) {
+                        if (action == 'create') {
+                            $('#actionNameShortUrl').text("Your shortened URL");
+                        }
+                        else {
+                            $('#actionNameShortUrl').text("Your original URL");
+                        }
+                        console.log(data.url);
+                        $('#contentShortUrl').text(data.url);
+                        $('#myModal').modal('show');
+                    });
+                })
+                .catch(function (err) {
+                    console.error(err);
+                });
+        }
+
+        function createShortUrl() {
+            $("form").submit(createShortUrl);
+
+            function createShortUrl(event) {
+                var input = $(this).serializeArray();
+                event.preventDefault();
+                return sendToServer(input, 'create', 'PUT');
+            }
+        }
+
+        function getOriginalUrl() {
+            $("form").submit(function (event) {
+                var input = $(this).serializeArray();
+                event.preventDefault();
+                return sendToServer(input, 'retrieve', 'GET');
+            });
+        }
+    </script>
+</div>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script> $('document').ready(function () {
+});
+</script>
+</body>
+</html>
